@@ -1,0 +1,59 @@
+# Role-Based Access Control definitions, as described in Section 4.2
+# (Component 7) of the paper:
+#
+#   "Three roles are defined: Administrator (full access to
+#   pseudonymized data, re-identification keys, and salt values),
+#   Security Analyst (access to pseudonymized logs and dashboards only,
+#   with no access to re-identification keys or salts), and Viewer
+#   (read-only access to dashboards and reports)."
+#
+# This file is the single source of truth for role permissions, loaded
+# by access_control.py. It does not itself perform authentication --
+# wire it up to your identity provider (LDAP, SSO, Wazuh's own user
+# management, etc.) before deployment.
+
+roles:
+
+  administrator:
+    description: >
+      Full access to pseudonymized data, re-identification keys, and
+      salt values. The only role permitted to reverse pseudonyms via
+      the ReidentificationKeyStore (see src/pseudonymization/reidentification.py),
+      and the only role that holds the AES-256 key protecting that store.
+    permissions:
+      - view_pseudonymized_logs
+      - view_dashboards
+      - view_reports
+      - access_reidentification_keys
+      - access_salts
+      - reidentify_pseudonyms
+      - rotate_encryption_keys
+      - view_access_audit_log
+      - manage_users
+
+  security_analyst:
+    description: >
+      Access to pseudonymized logs and dashboards for day-to-day threat
+      detection and incident response. No access to re-identification
+      keys or salts -- cannot reverse a pseudonym back to its original
+      value under any circumstance.
+    permissions:
+      - view_pseudonymized_logs
+      - view_dashboards
+      - view_reports
+      - create_custom_rules
+      - acknowledge_alerts
+
+  viewer:
+    description: >
+      Read-only access to dashboards and reports. Cannot modify
+      detection rules, cannot access raw or pseudonymized log data
+      directly outside of pre-built dashboard views.
+    permissions:
+      - view_dashboards
+      - view_reports
+
+# Permissions NOT granted to any role by default and requiring explicit
+# escalation/approval outside this system:
+#   - direct database/index access bypassing the application layer
+#   - modifying salt values or re-identification key rotation policy

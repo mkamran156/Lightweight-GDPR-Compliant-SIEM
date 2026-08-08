@@ -13,28 +13,54 @@ Security Information and Event Management (SIEM) tools help organizations detect
 - **Batch processing** for efficient log ingestion
 - **Per-field salted hashing** (MD5 with distinct salts per sensitive-field type)
 - **A persistent, cross-batch pseudonym store**, guaranteeing that a given sensitive value always maps to the same pseudonym across the full deployment lifetime — not just within a single batch
+- **Role-based access control**, separating pseudonymized log access (Security Analyst, Viewer) from re-identification capability (Administrator only)
 
 The system was evaluated in a real organizational data centre against internal and external attack scenarios, comparing three configurations: no pseudonymization, an unoptimized Logstash-based baseline, and the proposed optimized approach.
 
 ## Repository Structure
 
 ```
+├── src/
+│   ├── pseudonymization/     # Algorithm 1: batch processing, salted hashing,
+│   │                         # persistent pseudonym store, re-identification key store
+│   └── rbac/                 # Role-based access control (Administrator/Analyst/Viewer)
+├── config/
+│   └── wazuh/
+│       └── custom_rules/     # Detection rules: SSH brute-force, auth failures,
+│                             # unauthorized access
 ├── evaluation/
-│   └── figures/          # Scripts to regenerate the paper's figures
+│   └── figures/              # Scripts to regenerate the paper's figures
 │       ├── fig4_threat_model.py
 │       ├── fig5_persistent_store.py
 │       ├── fig11_resource_utilization.py
-│       ├── fig12_throughput_latency.py
-│       └── requirements.txt
-├── src/                   # Core pseudonymization implementation (in progress)
-├── config/                 # Wazuh / Elastic Stack configuration (in progress)
+│       └── fig12_throughput_latency.py
 ├── LICENSE
 └── README.md
 ```
 
-This repository is under active development alongside the paper's submission process. Additional components (source code, Wazuh rules, RBAC configuration, and benchmarking scripts) are being added incrementally — see the Roadmap section below.
-
 ## Getting Started
+
+### Running the pseudonymization algorithm
+
+```bash
+cd src
+pip install -r pseudonymization/requirements.txt --break-system-packages
+python -m pseudonymization.example_usage
+```
+
+This demonstrates the full pipeline, including the cross-batch consistency
+property shown in Fig. 5: the same source IP appearing in two separate
+batches receives the identical pseudonym both times.
+
+### Checking RBAC permissions
+
+```bash
+python src/rbac/access_control.py
+```
+
+### Deploying the Wazuh detection rules
+
+See `config/wazuh/custom_rules/README.md` for installation instructions.
 
 ### Regenerating the paper's figures
 
@@ -44,16 +70,7 @@ pip install -r requirements.txt --break-system-packages
 python fig11_resource_utilization.py
 ```
 
-Each script writes a 300 DPI PNG matching the corresponding figure in the paper. See `evaluation/figures/README.md` for details on updating the scripts with your own measured data.
-
-## Roadmap
-
-- [x] Figure reproduction scripts (Figs. 4, 5, 11, 12)
-- [ ] Core pseudonymization algorithm implementation
-- [ ] Wazuh custom detection rules (SSH brute-force, auth failure, unauthorized access)
-- [ ] RBAC role configuration
-- [ ] Benchmarking and attack simulation scripts
-- [ ] Raw evaluation data (Table 4, confusion matrix)
+Each script writes a 300 DPI PNG matching the corresponding figure in the paper.
 
 ## Citation
 
@@ -64,7 +81,7 @@ If you use this work, please cite:
   title   = {A Lightweight GDPR-Compliant Open-Source SIEM Framework with Optimized Log Pseudonymization for Real-Time Threat Detection},
   author  = {[Muhammad Kamran Khan]},
   year    = {2026},
-  journal = {[]}
+  journal = {[Journal name once accepted]}
 }
 ```
 

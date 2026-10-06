@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+title: Lightweight GDPR-Compliant Open-Source SIEM
+message: >-
+  If you use this software, please cite both the software and the
+  accompanying paper.
+type: software
+authors:
+  - given-names: Muhammad Kamran
+    family-names: Khan
+    email: engr.m.kamran@gmail.com
+    affiliation: >-
+      Department of Computer Science, COMSATS University Islamabad,
+      Wah Campus
+repository-code: >-
+  https://github.com/mkamran156/Lightweight-GDPR-Compliant-SIEM
+license: MIT
+preferred-citation:
+  type: article
+  title: >-
+    A Lightweight, Field-Piloted GDPR-Compliant Open-Source SIEM Framework
+    with Optimized Log Pseudonymization for Real-Time Threat Detection
+  authors:
+    - given-names: Muhammad Kamran
+      family-names: Khan
+  year: 2026
+  notes: Under review

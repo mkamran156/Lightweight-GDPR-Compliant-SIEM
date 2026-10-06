@@ -1,7 +1,7 @@
 """
 Re-identification key store, as described in Section 4.2 (Component 6):
 
-    "Re-identification keys and per-field pseudonymization salts are
+    "Re-identification keys and per-field pseudonymization keys are
     stored in a dedicated Elasticsearch index, separate from the
     pseudonymized log data, and encrypted at rest using AES-256."
     "The AES-256 encryption key protecting the re-identification key
@@ -9,8 +9,8 @@ Re-identification key store, as described in Section 4.2 (Component 6):
     alongside the encrypted index, and is rotated annually or
     immediately upon suspected compromise or personnel change."
 
-Because MD5 is a one-way hash, "re-identification" is not achieved by
-reversing the hash -- it is achieved by maintaining a SEPARATE,
+Because HMAC-SHA-256 is a one-way construction, "re-identification" is
+not achieved by reversing the pseudonym -- it is achieved by maintaining a SEPARATE,
 access-controlled, encrypted table that records the reverse mapping
 (pseudonym -> original value) at the time of pseudonymization. This is
 distinct from persistent_store.py (the forward value->pseudonym cache

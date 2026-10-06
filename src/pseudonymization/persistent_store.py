@@ -7,13 +7,14 @@ Design rationale (from the paper):
     value, is used to save previously pseudonymized values across the
     full deployment lifetime rather than a single batch. [...] this
     mechanism improves processing time for repeated values and
-    guarantees that a given sensitive value always maps to the same
+    ensures that a given sensitive value always maps to the same
     pseudonym, preserving cross-batch and cross-time correlation for
     attack tracking."
 
-This is a performance cache, not a security boundary: because hashing
-is deterministic (MD5 with a static per-field salt), the same value
-will always hash to the same pseudonym whether or not it is cached.
+This is a performance cache, not a security boundary: because the
+construction is deterministic (HMAC-SHA-256 under a static per-field
+key), the same value always yields the same pseudonym whether or not it
+is cached.
 The store's purpose is purely to avoid recomputing the hash for values
 that repeat across batches (Algorithm 1, lines 9-14).
 
@@ -84,7 +85,7 @@ class PersistentPseudonymStore:
     Implements the store used in Algorithm 1, lines 9-14:
         pseudonym store key <- (sensitive_field, sensitive_field_value)
         if pseudonym store key not in pseudonym store:
-            pseudonymized_value <- MD5(sensitive_field_value, salt[field])
+            pseudonymized value <- HMAC-SHA-256 (key[sensitive field], sensitive field value)
             pseudonym store[key] <- pseudonymized_value   # persisted
         else:
             pseudonymized_value <- pseudonym store[key]

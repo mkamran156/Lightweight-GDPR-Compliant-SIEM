@@ -8,7 +8,7 @@ identity provider, with the resulting role passed in here.
 
 Usage:
     rbac = RBACPolicy.from_yaml("roles.yaml")
-    if rbac.is_allowed(user_role="security_analyst", permission="access_salts"):
+    if rbac.is_allowed(user_role="security_analyst", permission="access_pseudonymization_keys"):
         ...
     else:
         raise PermissionError(...)

@@ -2,9 +2,9 @@
 # (Component 7) of the paper:
 #
 #   "Three roles are defined: Administrator (full access to
-#   pseudonymized data, re-identification keys, and salt values),
+#   pseudonymized data, re-identification keys, and pseudonymization keys),
 #   Security Analyst (access to pseudonymized logs and dashboards only,
-#   with no access to re-identification keys or salts), and Viewer
+#   with no access to re-identification keys or pseudonymization keys), and Viewer
 #   (read-only access to dashboards and reports)."
 #
 # This file is the single source of truth for role permissions, loaded
@@ -17,7 +17,7 @@ roles:
   administrator:
     description: >
       Full access to pseudonymized data, re-identification keys, and
-      salt values. The only role permitted to reverse pseudonyms via
+      pseudonymization keys. The only role permitted to reverse pseudonyms via
       the ReidentificationKeyStore (see src/pseudonymization/reidentification.py),
       and the only role that holds the AES-256 key protecting that store.
     permissions:
@@ -25,7 +25,7 @@ roles:
       - view_dashboards
       - view_reports
       - access_reidentification_keys
-      - access_salts
+      - access_pseudonymization_keys
       - reidentify_pseudonyms
       - rotate_encryption_keys
       - view_access_audit_log
@@ -35,7 +35,7 @@ roles:
     description: >
       Access to pseudonymized logs and dashboards for day-to-day threat
       detection and incident response. No access to re-identification
-      keys or salts -- cannot reverse a pseudonym back to its original
+      keys or pseudonymization keys: cannot reverse a pseudonym back to its original
       value under any circumstance.
     permissions:
       - view_pseudonymized_logs
@@ -56,4 +56,4 @@ roles:
 # Permissions NOT granted to any role by default and requiring explicit
 # escalation/approval outside this system:
 #   - direct database/index access bypassing the application layer
-#   - modifying salt values or re-identification key rotation policy
+#   - modifying pseudonymization keys or the re-identification key rotation policy

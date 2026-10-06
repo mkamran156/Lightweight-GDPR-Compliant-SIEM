@@ -1,7 +1,7 @@
 from .algorithm import PseudonymizationAlgorithm
+from .key_manager import KeyManager, LocalFileKeyBackend, SENSITIVE_FIELDS
 from .persistent_store import InMemoryBackend, PersistentPseudonymStore, RedisBackend
 from .reidentification import InMemoryReidBackend, ReidentificationKeyStore
-from .salt_manager import LocalFileSaltBackend, SaltManager, SENSITIVE_FIELDS
 
 __all__ = [
     "PseudonymizationAlgorithm",
@@ -10,7 +10,7 @@ __all__ = [
     "RedisBackend",
     "ReidentificationKeyStore",
     "InMemoryReidBackend",
-    "SaltManager",
-    "LocalFileSaltBackend",
+    "KeyManager",
+    "LocalFileKeyBackend",
     "SENSITIVE_FIELDS",
 ]
